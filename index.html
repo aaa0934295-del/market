@@ -1,0 +1,1400 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سوق الذكاء الاصطناعي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Cairo:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+* { box-sizing: border-box; }
+html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+body {
+  font-family: 'Cairo', 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.app-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  flex: 1;
+  display: none;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.page.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-container {
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 30px 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  background: linear-gradient(135deg, #00d4ff, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.05);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+button {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #00d4ff, #7c3aed);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 212, 255, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #00d4ff;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-text {
+  background: none;
+  color: #00d4ff;
+  text-decoration: underline;
+  padding: 8px 0;
+  margin-top: 0;
+}
+
+.btn-text:hover {
+  color: #7c3aed;
+  box-shadow: none;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.product-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: right;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.product-card h3 {
+  margin: 0 0 8px 0;
+  color: #00d4ff;
+}
+
+.product-card p {
+  margin: 6px 0;
+  color: #ccc;
+  font-size: 13px;
+}
+
+.product-price {
+  color: #fbbf24;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 8px 0 !important;
+}
+
+.product-seller {
+  color: #888;
+  font-size: 12px;
+}
+
+.product-card button {
+  margin-top: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.msg-item {
+  margin: 8px 0;
+  padding: 12px;
+  background: rgba(0, 212, 255, 0.1);
+  border-right: 3px solid #00d4ff;
+  border-radius: 6px;
+  text-align: right;
+}
+
+.msg-item.own {
+  background: rgba(124, 58, 237, 0.1);
+  border-right-color: #7c3aed;
+}
+
+.msg-sender {
+  font-weight: 600;
+  color: #00d4ff;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.msg-sender.own {
+  color: #7c3aed;
+}
+
+.msg-text {
+  word-wrap: break-word;
+}
+
+.msg-time {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.btn-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.btn-group button {
+  margin-top: 0;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #00d4ff, #7c3aed);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+  animation: slideIn 0.3s ease;
+  z-index: 1000;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(400px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.admin-section {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .card { padding: 20px 16px; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+}
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="app-wrapper">
+   <!-- تسجيل الدخول -->
+   <div class="page" id="loginPage">
+    <div class="page-container">
+     <div class="card">
+      <h1>🤖 AI Market</h1>
+      <h2>سوق الذكاء الاصطناعي</h2><input type="text" id="loginUser" placeholder="اسم المستخدم"> <input type="password" id="loginPass" placeholder="كلمة المرور"> <button onclick="login()" style="margin-top: 12px;">دخول</button> <button class="btn-text" onclick="showPage('registerPage')">إنشاء حساب جديد؟</button> <button class="btn-text" onclick="showPage('adminLoginPage')" style="margin-top: 20px;">⚙️ لوحة التحكم</button>
+     </div>
+    </div>
+   </div><!-- لوحة التحكم - تسجيل الدخول -->
+   <div class="page" id="adminLoginPage">
+    <div class="page-container">
+     <div class="card">
+      <h1>👑 لوحة التحكم</h1>
+      <h2>الملك والوزراء</h2><input type="password" id="adminPassword" placeholder="كلمة المرور"> <input type="text" id="adminUsername" placeholder="اسم المستخدم"> <button onclick="adminLogin()">دخول لوحة التحكم</button> <button class="btn-text" onclick="showPage('loginPage')">العودة</button>
+     </div>
+    </div>
+   </div><!-- إنشاء حساب -->
+   <div class="page" id="registerPage">
+    <div class="page-container">
+     <div class="card">
+      <h2>إنشاء حساب جديد</h2><input type="text" id="regUser" placeholder="اسم المستخدم"> <input type="password" id="regPass" placeholder="كلمة المرور"> <input type="password" id="regPassConfirm" placeholder="تأكيد كلمة المرور"> <button onclick="register()">إنشاء الحساب</button> <button class="btn-text" onclick="showPage('loginPage')">لديّ حساب بالفعل</button>
+     </div>
+    </div>
+   </div><!-- الصفحة الرئيسية -->
+   <div class="page" id="homePage">
+    <div class="page-container">
+     <div class="card">
+      <h2>أهلاً 👋</h2>
+      <p style="margin: 0 0 20px 0; color: #00d4ff; font-size: 18px;"><span id="currentUser"></span></p>
+      <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 15px; text-align: center;">
+       <div style="font-size: 12px; color: #fbbf24; margin-bottom: 5px;">
+        💰 رصيد المحفظة
+       </div>
+       <div style="font-size: 28px; font-weight: 700; color: #fbbf24;" id="walletBalance">
+        $0.00
+       </div>
+      </div><button onclick="showPage('walletPage')" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">💳 المحفظة</button> <button onclick="showPage('shopPage')">🛍️ المتجر</button> <button onclick="showPage('uploadPage')" style="margin-top: 12px;">📤 رفع منتج</button> <button onclick="showPage('messagesPage')" style="margin-top: 12px;">💬 الرسائل</button> <button class="btn-secondary" onclick="logout()" style="margin-top: 12px;">🚪 تسجيل خروج</button>
+      <div id="adminBox" class="admin-section" style="display:none;">
+       <h3>⚙️ لوحة التحكم</h3>
+       <div id="userList"></div>
+      </div>
+     </div>
+    </div>
+   </div><!-- المتجر -->
+   <div class="page" id="shopPage">
+    <div class="page-container">
+     <div class="card">
+      <h2>🛍️ المتجر</h2><input type="text" id="searchInput" placeholder="ابحث عن المنتجات...">
+      <div id="productGrid" class="product-grid"></div><button class="btn-secondary" onclick="showPage('homePage')" style="margin-top: 20px;">العودة</button>
+     </div>
+    </div>
+   </div><!-- رفع المنتج -->
+   <div class="page" id="uploadPage">
+    <div class="page-container">
+     <div class="card">
+      <h2>📤 رفع منتج جديد</h2><input type="text" id="productName" placeholder="اسم المنتج"> <textarea id="productDesc" placeholder="وصف المنتج"></textarea> <input type="text" id="productPrice" placeholder="السعر بالدولار"> <button onclick="uploadProduct()">رفع المنتج</button> <button class="btn-secondary" onclick="showPage('homePage')" style="margin-top: 12px;">إلغاء</button>
+     </div>
+    </div>
+   </div><!-- الرسائل -->
+   <div class="page" id="messagesPage">
+    <div class="page-container">
+     <div class="card">
+      <h2>💬 الرسائل</h2><select id="msgRecipient" style="margin-bottom: 16px;"></select> <textarea id="msgContent" placeholder="اكتب رسالتك..."></textarea> <button onclick="sendMessage()">إرسال</button>
+      <div id="msgList" style="margin-top: 20px; max-height: 250px; overflow-y: auto;"></div><button class="btn-secondary" onclick="showPage('homePage')" style="margin-top: 20px;">إغلاق</button>
+     </div>
+    </div>
+   </div><!-- لوحة التحكم الإدارية -->
+   <div class="page" id="adminPage">
+    <div class="page-container">
+     <div class="card">
+      <h2>⚙️ لوحة التحكم الإدارية</h2><!-- الإحصائيات -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0;">
+       <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; padding: 15px; text-align: center;">
+        <div style="font-size: 24px; font-weight: 700; color: #00d4ff;" id="totalUsers">
+         0
+        </div>
+        <div style="font-size: 12px; color: #aaa; margin-top: 5px;">
+         👥 إجمالي المستخدمين
+        </div>
+       </div>
+       <div style="background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 10px; padding: 15px; text-align: center;">
+        <div style="font-size: 24px; font-weight: 700; color: #7c3aed;" id="totalProducts">
+         0
+        </div>
+        <div style="font-size: 12px; color: #aaa; margin-top: 5px;">
+         📦 إجمالي المنتجات
+        </div>
+       </div>
+      </div><!-- قائمة المستخدمين -->
+      <h3 style="margin-top: 25px;">👥 المستخدمين</h3>
+      <div id="adminUserList" style="max-height: 200px; overflow-y: auto;"></div><!-- قائمة المنتجات -->
+      <h3 style="margin-top: 25px;">📦 المنتجات</h3>
+      <div id="adminProductList" style="max-height: 250px; overflow-y: auto;"></div><!-- خيارات إدارية -->
+      <h3 style="margin-top: 25px;">⚡ الإجراءات</h3><button onclick="deleteAllData()" style="background: rgba(239, 68, 68, 0.8); margin-top: 12px;">🗑️ حذف جميع البيانات</button> <button onclick="promoteUserToAdmin()" style="background: rgba(59, 130, 246, 0.8); margin-top: 12px;">👑 ترقية المستخدم</button> <button class="btn-secondary" onclick="showPage('homePage')" style="margin-top: 20px;">العودة</button>
+     </div>
+    </div>
+   </div><!-- صفحة المحفظة -->
+   <div class="page" id="walletPage">
+    <div class="page-container">
+     <div class="card">
+      <h2>💳 المحفظة الرقمية</h2><!-- تنبيه ERC20 USDT -->
+      <div style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.2)); border: 2px solid #fbbf24; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
+       <div style="font-weight: 700; color: #fbbf24; margin-bottom: 8px; font-size: 14px;">
+        ⚠️ طريقة الإيداع والسحب
+       </div>
+       <div style="color: #fbbf24; font-size: 13px; line-height: 1.6;">
+        ✅ الإيداع: <span style="color: #00d4ff;">ERC20 USDT</span> فقط<br>
+         ✅ السحب: <span style="color: #00d4ff;">ERC20 USDT</span> فقط
+       </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0;">
+       <div style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.1)); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px; padding: 15px; text-align: center;">
+        <div style="font-size: 11px; color: #fbbf24; margin-bottom: 8px;">
+         💰 الرصيد بـ PLK
+        </div>
+        <div style="font-size: 24px; font-weight: 700; color: #fbbf24;" id="walletDisplayBalance">
+         0 PLK
+        </div>
+       </div>
+       <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(34, 197, 94, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 15px; text-align: center;">
+        <div style="font-size: 11px; color: #10b981; margin-bottom: 8px;">
+         💹 الأرباح
+        </div>
+        <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="profitDisplay">
+         0 PLK
+        </div>
+       </div>
+      </div>
+      <h3>📥 إيداع رصيد (ERC20 USDT)</h3><!-- عنوان محفظة الاستقبال -->
+      <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; padding: 15px; margin-bottom: 15px; text-align: center;">
+       <div style="font-size: 11px; color: #aaa; margin-bottom: 8px;">
+        📍 عنوان محفظة الاستقبال
+       </div>
+       <div style="font-family: monospace; font-size: 12px; color: #00d4ff; word-break: break-all; margin-bottom: 10px;">
+        0x3f89972425e83bf77abf1f6b6342a34452438cfe
+       </div><button onclick="copyToClipboard('0x3f89972425e83bf77abf1f6b6342a34452438cfe')" style="background: rgba(0, 212, 255, 0.3); padding: 8px 12px; font-size: 12px; width: auto; margin-top: 0;">📋 نسخ العنوان</button>
+      </div><!-- حقول الإيداع --> <input type="text" id="depositAddress" placeholder="عنوان محفظتك (ERC20)"> <input type="number" id="depositUSDT" placeholder="المبلغ بـ USDT" min="1" step="0.01">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+       <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 12px; text-align: center; font-size: 13px; color: #00d4ff;">
+        <div style="font-size: 11px; color: #aaa;">
+         ستستقبل
+        </div>
+        <div style="font-size: 16px; font-weight: 700;" id="depositPreview">
+         0 PLK
+        </div>
+       </div>
+       <div id="depositPreviewImg" style="background: rgba(255,255,255,0.05); border: 1px dashed rgba(0, 212, 255, 0.3); border-radius: 8px; padding: 12px; text-align: center; display: flex; align-items: center; justify-content: center;">
+        <div style="font-size: 12px; color: #aaa;">
+         معاينة الصورة
+        </div>
+       </div>
+      </div><label style="display: block; margin-bottom: 10px;"> <input type="file" id="depositProof" accept="image/*" style="display: block; margin-bottom: 8px;" placeholder="رفع صورة التحويل"> </label> <button onclick="depositRequest()" style="margin-top: 0;">📤 طلب إيداع</button>
+      <h3 style="margin-top: 20px;">💸 تحويل بـ USDT</h3>
+      <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 15px; font-size: 13px; color: #00d4ff;">
+       <div style="font-weight: 600; margin-bottom: 8px;">
+        📝 طريقة التحويل:
+       </div>
+       <div style="font-size: 12px; line-height: 1.6;">
+        1️⃣ أدخل اسم المستفيد<br>
+         2️⃣ أدخل المبلغ بـ USDT<br>
+         3️⃣ سيتم حساب العمولة تلقائياً (3%)
+       </div>
+      </div><input type="text" id="transferUsername" placeholder="اسم المستفيد"> <input type="number" id="transferAmountUSDT" placeholder="المبلغ بـ USDT" min="1" step="0.01">
+      <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 12px; margin: 15px 0; text-align: center; font-size: 13px; color: #ef4444;">
+       <div style="font-size: 11px; color: #aaa;">
+        سيتم خصم (يشمل العمولة 3%)
+       </div>
+       <div style="font-size: 16px; font-weight: 700;" id="transferPreview">
+        0 PLK
+       </div>
+      </div><button onclick="sendTransferUSDT()" style="background: linear-gradient(135deg, #00d4ff, #7c3aed); margin-top: 0;">📤 إرسال التحويل</button>
+      <h3 style="margin-top: 20px;">📤 سحب رصيد (ERC20 USDT)</h3>
+      <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 15px; font-size: 13px; color: #00d4ff;">
+       <div style="font-weight: 600; margin-bottom: 8px;">
+        📝 طريقة السحب:
+       </div>
+       <div style="font-size: 12px; line-height: 1.6;">
+        1️⃣ أدخل عنوان محفظتك (ERC20)<br>
+         2️⃣ أدخل المبلغ بـ USDT<br>
+         3️⃣ سيتم حساب العمولة تلقائياً (10%)<br>
+         4️⃣ انتظر موافقة الإدارة
+       </div>
+      </div><input type="text" id="withdrawAddress" placeholder="عنوان محفظتك (ERC20)"> <input type="number" id="withdrawUSDT" placeholder="المبلغ بـ USDT" min="1" step="0.01">
+      <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 12px; margin: 15px 0; text-align: center; font-size: 13px; color: #ef4444;">
+       <div style="font-size: 11px; color: #aaa;">
+        سيتم خصم (يشمل العمولة 10%)
+       </div>
+       <div style="font-size: 16px; font-weight: 700;" id="withdrawPreview">
+        0 PLK
+       </div>
+      </div><button onclick="withdrawRequest()" style="background: linear-gradient(135deg, #ef4444, #dc2626); margin-top: 0;">🏦 طلب سحب</button>
+      <h3 style="margin-top: 20px;">⏳ العمليات المعلقة</h3>
+      <div id="pendingRequests" style="max-height: 150px; overflow-y: auto; margin-bottom: 15px;"></div>
+      <h3 style="margin-top: 20px;">📊 كشف الحساب</h3>
+      <div id="transactionList" style="max-height: 250px; overflow-y: auto;"></div><button class="btn-secondary" onclick="showPage('homePage')" style="margin-top: 20px;">العودة</button>
+     </div>
+    </div>
+   </div><!-- صفحة لوحة التحكم الملك والوزراء -->
+   <div class="page" id="kingAdminPage">
+    <div class="page-container">
+     <div class="card">
+      <h2>👑 لوحة التحكم</h2>
+      <div style="background: rgba(251, 191, 36, 0.15); border-left: 3px solid #fbbf24; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: right;">
+       <div style="font-size: 13px; color: #fbbf24;"><span id="adminRoleDisplay">👑 الملك</span> - <span id="adminNameDisplay">admin</span>
+       </div>
+      </div>
+      <h3 style="margin-top: 0;">⏳ طلبات الإيداع والسحب</h3>
+      <div id="kingDepositRequests" style="max-height: 200px; overflow-y: auto; margin-bottom: 20px;"></div>
+      <h3>⏳ طلبات التحويل من الوزراء</h3>
+      <div id="kingTransferRequests" style="max-height: 200px; overflow-y: auto; margin-bottom: 20px;"></div>
+      <h3>👥 إدارة المستخدمين</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;"><input type="text" id="kingSelectUser" placeholder="اسم المستخدم"> <select id="kingUserAction"> <option value="">اختر الإجراء</option> <option value="freeze">🔒 تقييد المحفظة</option> <option value="ban">❌ حظر الحساب</option> <option value="unfreeze">🔓 إلغاء التقييد</option> <option value="unban">✅ إلغاء الحظر</option> <option value="promote">👤 ترقية لوزير</option> </select>
+      </div><button onclick="kingExecuteUserAction()">تنفيذ</button>
+      <h3 style="margin-top: 20px;">📊 الإحصائيات</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+       <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-size: 11px; color: #aaa;">
+         👥 المستخدمين
+        </div>
+        <div style="font-size: 18px; font-weight: 700; color: #00d4ff;" id="kingTotalUsers">
+         0
+        </div>
+       </div>
+       <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 8px; padding: 12px; text-align: center;">
+        <div style="font-size: 11px; color: #aaa;">
+         💰 إجمالي العمليات
+        </div>
+        <div style="font-size: 18px; font-weight: 700; color: #fbbf24;" id="kingTotalTransactions">
+         0
+        </div>
+       </div>
+      </div>
+      <h3 style="margin-top: 20px;">🔓 المحسوبات المقيدة</h3>
+      <div id="frozenAccountsList" style="max-height: 150px; overflow-y: auto; margin-bottom: 15px;"></div>
+      <h3 style="margin-top: 20px;">⛔ الحسابات المحظورة</h3>
+      <div id="bannedAccountsList" style="max-height: 150px; overflow-y: auto; margin-bottom: 15px;"></div><button class="btn-secondary" onclick="kingLogout()" style="margin-top: 20px;">🚪 تسجيل الخروج</button>
+     </div>
+    </div>
+   </div>
+   <div class="page" id="chatProductPage">
+    <div class="page-container">
+     <div class="card">
+      <h2 id="chatProductTitle">💬 التحدث مع البائع</h2>
+      <div id="chatProductDetail" style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+      </div>
+      <div id="productChatList" style="max-height: 280px; overflow-y: auto; margin: 20px 0;"></div><textarea id="productChatContent" placeholder="اكتب رسالتك..."></textarea> <button onclick="sendProductChat()">📤 إرسال</button> <button class="btn-secondary" onclick="showPage('shopPage')" style="margin-top: 12px;">العودة</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div id="toastContainer"></div>
+  <script>
+let users = JSON.parse(localStorage.getItem('users')) || {};
+let currentUser = null;
+let products = JSON.parse(localStorage.getItem('products')) || [];
+let messages = JSON.parse(localStorage.getItem('messages')) || [];
+let productChats = JSON.parse(localStorage.getItem('productChats')) || [];
+let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+let currentProductChat = null;
+let transfers = JSON.parse(localStorage.getItem('transfers')) || [];
+let adminRequests = JSON.parse(localStorage.getItem('adminRequests')) || [];
+let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
+let frozenAccounts = JSON.parse(localStorage.getItem('frozenAccounts')) || [];
+
+const KING_PASSWORD = 'admin';
+const EXCHANGE_RATE = 133; // 1 USD = 133 PLK
+const WITHDRAWAL_FEE = 0.10; // 10%
+const TRANSFER_FEE = 0.03; // 3%
+const WALLET_ADDRESS = '0x3f89972425e83bf77abf1f6b6342a34452438cfe';
+let currentUserRole = null; // 'king' or 'admin'
+
+// ===== نظام الصفحات =====
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  
+  if (pageId === 'shopPage') {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.removeEventListener('input', filterProducts);
+      searchInput.addEventListener('input', filterProducts);
+    }
+    filterProducts();
+  } else if (pageId === 'messagesPage') {
+    loadMessages();
+  } else if (pageId === 'adminPage') {
+    loadAdminPanel();
+  } else if (pageId === 'walletPage') {
+    setTimeout(() => updateWalletDisplay(), 50);
+  }
+}
+
+function showToast(message, duration = 3000) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(() => toast.remove(), duration);
+}
+
+// ===== نظام المستخدم =====
+function register() {
+  const user = document.getElementById("regUser").value.trim();
+  const pass = document.getElementById("regPass").value;
+  const passConfirm = document.getElementById("regPassConfirm").value;
+  
+  if (!user || !pass || !passConfirm) {
+    showToast('⚠️ الرجاء ملء جميع الحقول');
+    return;
+  }
+  
+  if (pass !== passConfirm) {
+    showToast('❌ كلمات المرور غير متطابقة');
+    return;
+  }
+  
+  if (pass.length < 4) {
+    showToast('❌ كلمة المرور يجب أن تكون 4 أحرف على الأقل');
+    return;
+  }
+  
+  if (users[user]) {
+    showToast('❌ هذا المستخدم موجود بالفعل');
+    return;
+  }
+  
+  users[user] = { 
+    password: pass, 
+    admin: false, 
+    createdAt: new Date().toISOString(),
+    balance: 0
+  };
+  localStorage.setItem('users', JSON.stringify(users));
+  showToast('✅ تم إنشاء الحساب بنجاح!');
+  
+  document.getElementById("regUser").value = "";
+  document.getElementById("regPass").value = "";
+  document.getElementById("regPassConfirm").value = "";
+  
+  setTimeout(() => showPage('loginPage'), 1000);
+}
+
+function login() {
+  const user = document.getElementById("loginUser").value.trim();
+  const pass = document.getElementById("loginPass").value;
+  
+  if (!user || !pass) {
+    showToast('⚠️ الرجاء ملء جميع الحقول');
+    return;
+  }
+  
+  if (!users[user] || users[user].password !== pass) {
+    showToast('❌ بيانات دخول غير صحيحة');
+    return;
+  }
+  
+  // التحقق من الحظر
+  if (bannedUsers.includes(user)) {
+    showToast('❌ هذا الحساب محظور');
+    return;
+  }
+  
+  currentUser = user;
+  currentUserRole = null;
+  document.getElementById("currentUser").textContent = user;
+  
+  if (users[user].admin) {
+    document.getElementById("adminBox").style.display = "block";
+    loadUserList();
+  } else {
+    document.getElementById("adminBox").style.display = "none";
+  }
+  
+  document.getElementById("loginUser").value = "";
+  document.getElementById("loginPass").value = "";
+  
+  showPage('homePage');
+  setTimeout(() => updateWalletDisplay(), 100);
+  showToast(`👋 أهلاً بعودتك يا ${user}`);
+}
+
+function logout() {
+  currentUser = null;
+  currentUserRole = null;
+  showPage('loginPage');
+  showToast('👋 تم تسجيل الخروج بنجاح');
+}
+
+function loadUserList() {
+  const userList = document.getElementById("userList");
+  const allUsers = Object.keys(users);
+  userList.innerHTML = allUsers.map(u => `
+    <div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px; margin: 5px 0; font-size: 13px;">
+      ${u} ${users[u].admin ? '👑' : ''}
+    </div>
+  `).join("");
+}
+function uploadProduct() {
+  const name = document.getElementById("productName").value.trim();
+  const desc = document.getElementById("productDesc").value.trim();
+  const price = document.getElementById("productPrice").value.trim();
+  
+  if (!name || !desc || !price) {
+    showToast('⚠️ الرجاء ملء جميع الحقول');
+    return;
+  }
+  
+  if (isNaN(price) || parseFloat(price) <= 0) {
+    showToast('❌ السعر يجب أن يكون رقماً موجباً');
+    return;
+  }
+  
+  products.push({
+    id: Date.now(),
+    name,
+    desc,
+    price: parseFloat(price),
+    seller: currentUser,
+    createdAt: new Date().toISOString()
+  });
+  
+  localStorage.setItem('products', JSON.stringify(products));
+  showToast('✅ تم رفع المنتج بنجاح!');
+  
+  document.getElementById("productName").value = "";
+  document.getElementById("productDesc").value = "";
+  document.getElementById("productPrice").value = "";
+  
+  setTimeout(() => showPage('homePage'), 1000);
+}
+
+function filterProducts() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(search) ||
+    p.desc.toLowerCase().includes(search)
+  );
+  displayProducts(filtered);
+}
+
+function displayProducts(list) {
+  const grid = document.getElementById("productGrid");
+  
+  if (list.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>لا توجد منتجات</p></div>';
+    return;
+  }
+  
+  grid.innerHTML = list.map(p => `
+    <div class="product-card">
+      <h3>${p.name}</h3>
+      <p>${p.desc}</p>
+      <p class="product-price">💰 ${p.price} دولار</p>
+      <p class="product-seller">البائع: ${p.seller}</p>
+      <button onclick="openProductChat(${p.id}, '${p.name}', '${p.seller}')">💬 التحدث مع البائع</button>
+      <button onclick="buyProduct(${p.id}, '${p.name}')" style="margin-top: 8px;">شراء الآن</button>
+    </div>
+  `).join("");
+}
+
+function buyProduct(id, name) {
+  const product = products.find(p => p.id === id);
+  if (!product) return;
+  
+  const balance = users[currentUser].balance || 0;
+  if (balance < product.price) {
+    showToast(`❌ رصيدك غير كافي! تحتاج $${product.price - balance}`);
+    return;
+  }
+  
+  // خصم من محفظة المشتري
+  users[currentUser].balance = balance - product.price;
+  
+  // إضافة لمحفظة البائع
+  const seller = product.seller;
+  if (users[seller]) {
+    users[seller].balance = (users[seller].balance || 0) + product.price;
+  }
+  
+  // تسجيل العملية
+  transactions.push({
+    id: Date.now(),
+    from: currentUser,
+    to: seller,
+    amount: product.price,
+    productName: name,
+    productId: id,
+    type: 'purchase',
+    date: new Date().toISOString()
+  });
+  
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+  updateWalletDisplay();
+  
+  showToast(`✅ تمت عملية الشراء بنجاح! تم دفع $${product.price}`);
+}
+
+// ===== نظام الرسائل =====
+function loadMessages() {
+  const select = document.getElementById("msgRecipient");
+  const userList = Object.keys(users).filter(u => u !== currentUser);
+  
+  if (userList.length === 0) {
+    select.innerHTML = '<option disabled>لا توجد مستخدمين آخرين</option>';
+    return;
+  }
+  
+  select.innerHTML = userList.map(u => `<option value="${u}">${u}</option>`).join("");
+  select.addEventListener('change', displayMessages);
+  displayMessages();
+}
+
+function displayMessages() {
+  const msgList = document.getElementById("msgList");
+  const msgRecipient = document.getElementById("msgRecipient");
+  
+  if (!msgRecipient.value) {
+    msgList.innerHTML = '<div class="empty-state" style="padding: 20px;"><p>اختر مستقبل أولاً</p></div>';
+    return;
+  }
+  
+  const recipient = msgRecipient.value;
+  
+  const userMsgs = messages.filter(m =>
+    (m.from === currentUser && m.to === recipient) ||
+    (m.from === recipient && m.to === currentUser)
+  ).sort((a, b) => new Date(a.time) - new Date(b.time));
+  
+  if (userMsgs.length === 0) {
+    msgList.innerHTML = '<div class="empty-state" style="padding: 20px;"><p>لا توجد رسائل بعد</p></div>';
+    return;
+  }
+  
+  msgList.innerHTML = userMsgs.map(m => `
+    <div class="msg-item ${m.from === currentUser ? 'own' : ''}">
+      <div class="msg-sender ${m.from === currentUser ? 'own' : ''}">${m.from}</div>
+      <div class="msg-text">${m.text}</div>
+      <div class="msg-time">${new Date(m.time).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}</div>
+    </div>
+  `).join("");
+  
+  msgList.scrollTop = msgList.scrollHeight;
+}
+
+function sendMessage() {
+  const to = document.getElementById("msgRecipient").value;
+  const text = document.getElementById("msgContent").value.trim();
+  
+  if (!to) {
+    showToast('⚠️ اختر مستقبل الرسالة');
+    return;
+  }
+  
+  if (!text) {
+    showToast('⚠️ اكتب رسالة');
+    return;
+  }
+  
+  messages.push({
+    from: currentUser,
+    to,
+    text,
+    time: new Date().toISOString()
+  });
+  
+  localStorage.setItem('messages', JSON.stringify(messages));
+  document.getElementById("msgContent").value = "";
+  displayMessages();
+  showToast('✅ تم إرسال الرسالة');
+}
+
+// ===== نظام المحادثات بين البائع والمشتري =====
+function openProductChat(productId, productName, seller) {
+  currentProductChat = {
+    productId,
+    productName,
+    seller,
+    buyer: currentUser
+  };
+  
+  document.getElementById("chatProductTitle").textContent = `💬 ${productName}`;
+  document.getElementById("chatProductDetail").innerHTML = `
+    <div style="text-align: right;">
+      <div style="font-weight: 700; color: #00d4ff; margin-bottom: 8px;">${productName}</div>
+      <div style="font-size: 13px; color: #aaa;">
+        👤 البائع: <span style="color: #00d4ff;">${seller}</span> | 🛍️ المشتري: <span style="color: #7c3aed;">${currentUser}</span>
+      </div>
+    </div>
+  `;
+  
+  displayProductChat();
+  showPage('chatProductPage');
+}
+
+function displayProductChat() {
+  const chatList = document.getElementById("productChatList");
+  
+  const chats = productChats.filter(c =>
+    c.productId === currentProductChat.productId &&
+    ((c.from === currentProductChat.seller && c.to === currentProductChat.buyer) ||
+     (c.from === currentProductChat.buyer && c.to === currentProductChat.seller))
+  ).sort((a, b) => new Date(a.time) - new Date(b.time));
+  
+  if (chats.length === 0) {
+    chatList.innerHTML = '<div class="empty-state" style="padding: 20px;"><p>لا توجد رسائل بعد</p></div>';
+    return;
+  }
+  
+  chatList.innerHTML = chats.map(c => `
+    <div class="msg-item ${c.from === currentUser ? 'own' : ''}">
+      <div class="msg-sender ${c.from === currentUser ? 'own' : ''}">${c.from}</div>
+      <div class="msg-text">${c.text}</div>
+      <div class="msg-time">${new Date(c.time).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}</div>
+    </div>
+  `).join("");
+  
+  chatList.scrollTop = chatList.scrollHeight;
+}
+
+function sendProductChat() {
+  const text = document.getElementById("productChatContent").value.trim();
+  
+  if (!text) {
+    showToast('⚠️ اكتب رسالة');
+    return;
+  }
+  
+  const recipient = currentProductChat.seller === currentUser ? currentProductChat.buyer : currentProductChat.seller;
+  
+  productChats.push({
+    productId: currentProductChat.productId,
+    productName: currentProductChat.productName,
+    from: currentUser,
+    to: recipient,
+    text,
+    time: new Date().toISOString()
+  });
+  
+  localStorage.setItem('productChats', JSON.stringify(productChats));
+  document.getElementById("productChatContent").value = "";
+  displayProductChat();
+  showToast('✅ تم إرسال الرسالة');
+}
+
+// ===== لوحة التحكم الإدارية =====
+function loadAdminPanel() {
+  // الإحصائيات
+  document.getElementById("totalUsers").textContent = Object.keys(users).length;
+  document.getElementById("totalProducts").textContent = products.length;
+  
+  // قائمة المستخدمين
+  const adminUserList = document.getElementById("adminUserList");
+  const userList = Object.keys(users).map(u => `
+    <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; margin: 8px 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: #00d4ff;">${u} ${users[u].admin ? '👑' : ''}</span>
+        <button onclick="removeUser('${u}')" style="background: rgba(239, 68, 68, 0.6); padding: 6px 12px; font-size: 12px; width: auto;">حذف</button>
+      </div>
+    </div>
+  `).join("");
+  adminUserList.innerHTML = userList || '<p style="color: #666;">لا يوجد مستخدمين</p>';
+  
+  // قائمة المنتجات
+  const adminProductList = document.getElementById("adminProductList");
+  const productList = products.map(p => `
+    <div style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; margin: 8px 0;">
+      <div style="color: #00d4ff; font-weight: 600;">${p.name}</div>
+      <div style="font-size: 12px; color: #aaa; margin: 4px 0;">💰 ${p.price} دولار | 👤 ${p.seller}</div>
+      <button onclick="deleteProduct(${p.id})" style="background: rgba(239, 68, 68, 0.6); padding: 6px 12px; font-size: 12px; width: auto; margin-top: 8px;">حذف</button>
+    </div>
+  `).join("");
+  adminProductList.innerHTML = productList || '<p style="color: #666;">لا توجد منتجات</p>';
+}
+
+function deleteAllData() {
+  if (confirm('⚠️ هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء')) {
+    users = {};
+    products = [];
+    messages = [];
+    productChats = [];
+    localStorage.clear();
+    showToast('✅ تم حذف جميع البيانات');
+    setTimeout(() => {
+      currentUser = null;
+      showPage('loginPage');
+    }, 1000);
+  }
+}
+
+function removeUser(username) {
+  if (confirm(`هل تريد حذف المستخدم "${username}"؟`)) {
+    delete users[username];
+    localStorage.setItem('users', JSON.stringify(users));
+    loadAdminPanel();
+    showToast('✅ تم حذف المستخدم');
+  }
+}
+
+function deleteProduct(productId) {
+  products = products.filter(p => p.id !== productId);
+  localStorage.setItem('products', JSON.stringify(products));
+  loadAdminPanel();
+  showToast('✅ تم حذف المنتج');
+}
+
+function promoteUserToAdmin() {
+  const username = prompt('أدخل اسم المستخدم لترقيته:');
+  if (username && users[username]) {
+    users[username].admin = true;
+    localStorage.setItem('users', JSON.stringify(users));
+    loadAdminPanel();
+    showToast(`✅ تم ترقية ${username} إلى مسؤول`);
+  } else if (username) {
+    showToast('❌ المستخدم غير موجود');
+  }
+}
+
+// ===== نظام المحفظة =====
+function updateWalletDisplay() {
+  if (!currentUser) return;
+  
+  const balance = users[currentUser].balance || 0;
+  const formatted = Math.floor(balance * EXCHANGE_RATE);
+  document.getElementById("walletBalance").textContent = `${formatted} PLK`;
+  document.getElementById("walletDisplayBalance").textContent = `${formatted} PLK`;
+  
+  // Update deposit preview
+  const depositUSDTInput = document.getElementById("depositUSDT");
+  if (depositUSDTInput) {
+    depositUSDTInput.removeEventListener('input', updateDepositPreview);
+    depositUSDTInput.addEventListener('input', updateDepositPreview);
+  }
+  
+  // Update transfer preview (USDT)
+  const transferAmountInput = document.getElementById("transferAmountUSDT");
+  if (transferAmountInput) {
+    transferAmountInput.removeEventListener('input', updateTransferPreview);
+    transferAmountInput.addEventListener('input', updateTransferPreview);
+  }
+  
+  // Update withdrawal preview
+  const withdrawUSDTInput = document.getElementById("withdrawUSDT");
+  if (withdrawUSDTInput) {
+    withdrawUSDTInput.removeEventListener('input', updateWithdrawPreview);
+    withdrawUSDTInput.addEventListener('input', updateWithdrawPreview);
+  }
+  
+  // حساب الأرباح من البيع
+  const profit = transactions
+    .filter(t => (t.from === currentUser && t.type === 'purchase') || (t.to === currentUser && t.type === 'purchase'))
+    .reduce((sum, t) => {
+      if (t.to === currentUser) return sum + t.amount;
+      return sum;
+    }, 0);
+  
+  document.getElementById("profitDisplay").textContent = `${Math.floor(profit * EXCHANGE_RATE)} PLK`;
+  
+  loadTransactionHistory();
+  loadPendingRequests();
+  
+  // معالجة رفع صور الإيداع
+  const depositProofInput = document.getElementById("depositProof");
+  if (depositProofInput) {
+    depositProofInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const preview = document.getElementById("depositPreviewImg");
+          preview.innerHTML = `<img src="${event.target.result}" style="max-width: 100%; max-height: 150px; border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.3);">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+}
+
+function updateDepositPreview() {
+  const usdtAmount = parseFloat(this.value) || 0;
+  const plkAmount = Math.floor(usdtAmount * EXCHANGE_RATE);
+  document.getElementById("depositPreview").textContent = `${plkAmount} PLK`;
+}
+
+function updateTransferPreview() {
+  const usdtAmount = parseFloat(this.value) || 0;
+  const fee = Math.floor(usdtAmount * TRANSFER_FEE * EXCHANGE_RATE);
+  const totalPlk = Math.floor(usdtAmount * EXCHANGE_RATE) + fee;
+  document.getElementById("transferPreview").textContent = `${totalPlk} PLK`;
+}
+
+function updateWithdrawPreview() {
+  const usdtAmount = parseFloat(this.value) || 0;
+  const fee = Math.floor(usdtAmount * WITHDRAWAL_FEE * EXCHANGE_RATE);
+  const totalPlk = Math.floor(usdtAmount * EXCHANGE_RATE) + fee;
+  document.getElementById("withdrawPreview").textContent = `${totalPlk} PLK`;
+}
+
+function addBalance(amount) {
+  if (!currentUser) {
+    showToast('❌ يجب تسجيل الدخول أولاً');
+    return;
+  }
+  
+  users[currentUser].balance = (users[currentUser].balance || 0) + amount;
+  
+  transactions.push({
+    id: Date.now(),
+    user: currentUser,
+    amount,
+    type: 'deposit',
+    description: `إيداع $${amount}`,
+    date: new Date().toISOString()
+  });
+  
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+  updateWalletDisplay();
+  showToast(`✅ تم إضافة $${amount} إلى محفظتك`);
+}
+
+function depositRequest() {
+  const usdtAmount = parseFloat(document.getElementById("depositUSDT").value);
+  const address = document.getElementById("depositAddress").value.trim();
+  const proofFile = document.getElementById("depositProof").files[0];
+  
+  if (!usdtAmount || usdtAmount <= 0) {
+    showToast('⚠️ أدخل مبلغاً صحيحاً');
+    return;
+  }
+  
+  if (!address) {
+    showToast('⚠️ أدخل عنوان محفظتك');
+    return;
+  }
+  
+  if (!proofFile) {
+    showToast('⚠️ يجب رفع صورة التحويل');
+    return;
+  }
+  
+  // قراءة الصورة
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const proofImage = event.target.result;
+    
+    // إنشاء طلب إيداع معلق
+    adminRequests.push({
+      id: Date.now(),
+      type: 'deposit',
+      user: currentUser,
+      usdtAmount: usdtAmount,
+      userAddress: address,
+      proofImage: proofImage,
+      plkAmount: Math.floor(usdtAmount * EXCHANGE_RATE),
+      status: 'pending',
+      approvedBy: null,
+      date: new Date().toISOString()
+    });
+    
+    localStorage.setItem('adminRequests', JSON.stringify(adminRequests));
+    document.getElementById("depositUSDT").value = "";
+    document.getElementById("depositAddress").value = "";
+    document.getElementById("depositProof").value = "";
+    document.getElementById("depositPreviewImg").innerHTML = "";
+    document.getElementById("depositPreview").textContent = "0 PLK";
+    updateWalletDisplay();
+    showToast(`✅ تم إرسال طلب إيداع ${usdtAmount} USDT (في انتظار الموافقة)`);
+  };
+  reader.readAsDataURL(proofFile);
+}
+
+function withdrawRequest() {
+  const usdtAmount = parseFloat(document.getElementById("withdrawUSDT").value);
+  const address = document.getElementById("withdrawAddress").value.trim();
+  const balance = users[currentUser].balance || 0;
+  const fee = usdtAmount * WITHDRAWAL_FEE;
+  const totalPlk = Math.floor((usdtAmount + fee) * EXCHANGE_RATE);
+  const currentPlk = Math.floor(balance * EXCHANGE_RATE);
+  
+  if (!usdtAmount || usdtAmount <= 0) {
+    showToast('⚠️ أدخل مبلغاً صحيحاً');
+    return;
+  }
+  
+  if (!address) {
+    showToast('⚠️ أدخل عنوان محفظتك (ERC20)');
+    return;
+  }
+  
+  if (totalPlk > currentPlk) {
+    showToast(`❌ رصيدك غير كافي! تحتاج ${totalPlk} PLK ولديك ${currentPlk} PLK`);
+    return;
+  }
+  
+  // إنشاء طلب سحب معلق
+  adminRequests.push({
+    id: Date.now(),
+    type: 'withdrawal',
+    user: currentUser,
+    usdtAmount: usdtAmount,
+    feeAmount: fee,
+    plkDeducted: totalPlk,
+    walletAddress: address,
+    status: 'pending',
+    approvedBy: null,
+    date: new Date().toISOString()
+  });
+  
+  localStorage.setItem('adminRequests', JSON.stringify(adminRequests));
+  document.getElementById("withdrawUSDT").value = "";
+  document.getElementById("withdrawAddress").value = "";
+  document.getElementById("withdrawPreview").textContent = "0 PLK";
+  updateWalletDisplay();
+  showToast(`✅ تم إرسال طلب سحب ${usdtAmount} USDT (سيتم خصم ${totalPlk} PLK)`);
+}
+
+function sendTransfer() {
+  const recipient = document.getElementById("transferRecipient").value;
+  const amount = parseFloat(document.getElementById("transferAmount").value);
+  const balance = users[currentUser].balance || 0;
+  const fee = amount * TRANSFER_FEE;
+  const totalDeduction = amount + fee;
+  
+  if (!recipient) {
+    showToast('⚠️ اختر مستقبل التحويل');
+    return;
+  }
+  
+  if (!amount || amount <= 0) {
+    showToast('⚠️ أدخل مبلغاً صحيحاً');
+    return;
+  }
+  
+  if (totalDeduction > balance) {
+    showToast(`❌ رصيدك غير كافي! تحتاج ${Math.floor(totalDeduction)} PLK ولديك ${Math.floor(balance)} PLK`);
+    return;
+  }
+  
+  // إنشاء طلب تحويل معلق
+  transfers.push({
+    id: Date.now(),
+    from: currentUser,
+    to: recipient,
+    amount: amount,
+    fee: Math.floor(fee),
+    total: Math.floor(totalDeduction),
+    status: 'pending',
+    approvedBy: null,
+    date: new Date().toISOString()
+  });
+  
+  localStorage.setItem('transfers', JSON.stringify(transfers));
+  document.getElementById("transferRecipient").value = "";
+  document.getElementById("transferAmount").value = "";
+  updateWalletDisplay();
+  showToast(`✅ تم إرسال طلب تحويل ${amount} PLK إلى ${recipient} (عمولة: ${Math.floor(fee)} PLK)`);
+}
+
+function sendTransferUSDT() {
+  const username = document.getElementById("transferUsername").value.trim();
+  const usdtAmount = parseFloat(document.getElementById("transferAmountUSDT").value);
+  const balance = users[currentUser].balance || 0;
+  const fee = usdtAmount * TRANSFER_FEE;
+  const totalPlk = Math.floor((usdtAmount + fee) * EXCHANGE_RATE);
+  
+  if (!username || !usdtAmount) {
+    showToast('⚠️ الرجاء ملء جميع الحقول');
+    return;
+  }
+  
+  if (!users[username]) {
+    showToast('❌ المستخدم غير موجود');
+    return;
+  }
+  
+  if (balance < totalPlk) {
+    showToast(`❌ رصيدك غير كافي! تحتاج ${totalPlk} PLK`);
+    return;
+  }
+  
+  // إنشاء طلب تحويل جديد
+  transfers.push({
+    id: Date.now(),
+    type: 'usdt_transfer',
+    from: currentUser,
+    toUsername: username,
+    usdtAmount: usdtAmount,
+    feeUSDT: fee,
+    totalPlkDeducted: totalPlk,
+    status: 'pending',
+    approvedBy: null,
+    date: new Date().toISOString()
+  });
+  
+  localStorage.setItem('transfers', JSON.stringify(transfers));
+  document.getElementById("transferUsername").value = "";
+  document.getElementById("transferAmountUSDT").value = "";
+  document.getElementById("transferPreview").textContent = "0 PLK";
+  updateWalletDisplay();
+  showToast(`✅ تم إرسال طلب تحويل ${usdtAmount} USDT إلى ${username}`);
+}
+
+function loadPendingRequests() {
+  const list = document.getElementById("pendingRequests");
+  
+  // الطلبات المرسلة والمستقبلة
+  const userTransfers = transfers.filter(t => 
+    t.from === currentUser || t.to === currentUser
+  ).sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  if (userTransfers.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="padding: 15px; font-size: 13px;">لا توجد عمليات معلقة</div>';
+    return;
+  }
+  
+  list.innerHTML = userTransfers.map(t => {
+    const isFrom = t.from === currentUser;
+    const otherUser = isFrom ? t.to : t.from;
+    const status = t.status === 'pending' ? '⏳' : t.status === 'accepted' ? '✅' : '❌';
+    
+    let buttons = '';
+    if (!isFrom && t.status === 'pending') {
+      buttons = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+          <button onclick="acceptTransfer(${t.id})" style="background: rgba(16, 185, 129, 0.6); padding: 6px; font-size: 12px; width: 100%; margin-top: 0;">✅ قبول</button>
+          <button onclick="rejectTransfer(${t.id})" style="background: rgba(239, 68, 68, 0.6); padding: 6px; font-size: 12px; width: 100%; margin-top: 0;">❌ رفض</button>
+        </div>
+      `;
+    }
+    
+    return `
+      <div style="padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin: 8px 0; font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <span>${status}</span>
+            <span style="color: ${isFrom ? '#ef4444' : '#10b981'};">${isFrom ? '← إرسال' : '→ استقبال'}</span>
+            <span style="color: #00d4ff;"> ${Math.floor(t.amount)} PLK</span>
+            <span style="color: #fbbf24;">(+ ${t.fee} رسوم)</span>
+            <span style="color: #aaa;">من ${isFrom ? t.to : t.from}</span>
+          </div>
+        </div>
+        ${buttons}
+      </div>
+    `;
+  }).join("");
+}
+
+function acceptTransfer(transferId) {
+  const transfer = transfers.find(t => t.id === transferId);
+  if (!transfer) return;
+  
+  // خصم من المرسل
+  users[transfer.from].balance = (users[transfer.from].balance || 0) - (transfer.amount + transfer.fee);
+  
+  // إضافة للمستقبل
+  users[transfer.to].balance = (users[transfer.to].balance || 0) + transfer.amount;
+  
+  // تحديث الطلب
+  transfer.status = 'accepted';
+  transfer.approvedBy = currentUser;
+  
+  // تسجيل العملية
+  transactions.push({
+    id: Date.now(),
+    from: transfer.from,
+    to: transfer.to,
+    amount: transfer.amount,
+    fee: transfer.fee,
+    type: 'transfer',
+    description: `تحويل ${transfer.amount} PLK`,
+    date: new Date().toISOString()
+  });
+  
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('transfers', JSON.stringify(transfers));
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+  updateWalletDisplay();
+  showToast(`✅ تم قبول التحويل ${Math.floor(transfer.amount)} PLK`);
+}
+
+function rejectTransfer(transferId) {
+  const transfer = transfers.find(t => t.id === transferId);
+  if (!transfer) return;
+  
+  transfer.status = 'rejected';
+  
+  localStorage.setItem('transfers', JSON.stringify(transfers));
+  updateWalletDisplay();
+  showToast(`❌ تم رفض التحويل`);
+}
+
+function loadTransactionHistory() {
+  const list = document.getElementById("transactionList");
+  const userTransactions = transactions.filter(t => 
+    t.user === currentUser || t.from === currentUser || t.to === currentUser
+  ).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 20);
+  
+  if (userTransactions.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="padding: 20px;">لا توجد عمليات</div>';
+    return;
+  }
+  
+  list.innerHTML = userTransactions.map(t => {
+    let details = '';
+    if (t.type === 'deposit') {
+      details = `<span style="color: #10b98
